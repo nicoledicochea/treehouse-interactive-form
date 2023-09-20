@@ -105,41 +105,54 @@ paymentSelect.addEventListener('change', (e) => {
 // form validation
 // visual validation errors
 
-function isValidEmail() {
-    const email = document.querySelector('#email').value
-    // regex code referenced from https://emailregex.com/
-    const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-    return regex.test(email)
-}
 
 const form = document.querySelector('form')
 
 form.addEventListener('submit', (e) => {
 
     // name validation
-
+    
     function isValidName() {
-        let userName = document.querySelector('#name')
-
-        userName = userName.value.trim()
-        return userName !== ''
-
+        let name = document.querySelector('#name')
+        name = name.value.trim()
+        return name !== ''
     }
 
+    const name = document.querySelector('#name')
+
     if(isValidName()) {
-        userName.parentElement.classList.add('valid')
-        userName.parentElement.classList.remove('not-valid')
-        userName.nextElementSibling.style.display = 'block'
+        name.parentElement.classList.add('valid')
+        name.parentElement.classList.remove('not-valid')
+        name.nextElementSibling.style.display = 'none'
     } else {
         e.preventDefault()
+        name.parentElement.classList.add('not-valid')
+        name.parentElement.classList.remove('valid')
+        name.nextElementSibling.style.display = 'block'
     }
 
     // email validation
 
-    if (!isValidEmail()) {
+    function isValidEmail() {
+        const email = document.querySelector('#email').value
+        // regex code referenced from https://emailregex.com/
+        const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    
+        return regex.test(email)
+    }
+
+    const email = document.querySelector('#email')
+
+    if (isValidEmail()) {
+        email.parentElement.classList.add('valid')
+        email.parentElement.classList.remove('not-valid')
+        email.nextElementSibling.style.display = 'none'
+    } else {
         e.preventDefault()
-        // console.log('invalid')
+        email.parentElement.classList.add('not-valid')
+        email.parentElement.classList.remove('valid')
+        email.nextElementSibling.style.display = 'block'
     }
 
     // activity validation
@@ -153,57 +166,78 @@ form.addEventListener('submit', (e) => {
         return totalCost === 0
     }
 
-    
-    if(isValidActivity()) {
+    if(!isValidActivity()) {
+        activitiesField.classList.add('valid')
+        activitiesField.classList.remove('not-valid')
+        activitiesField.lastElementChild.style.display = 'none'
+    } else {
         e.preventDefault()
-        // console.log('no activity chosen')
+        activitiesField.classList.add('not-valid')
+        activitiesField.classList.remove('valid')
+        activitiesField.lastElementChild.style.display = 'block'
     }
 
 
     // credit card validation
-    
-    function isValidCCNum() {
-        const ccNum = document.querySelector('#cc-num')
 
+    const ccNum = document.querySelector('#cc-num')
+    const zip = document.querySelector('#zip')
+    const cvv = document.querySelector('#cvv')
+
+    function isValidCCNum() {
         const regex = /^\d{13,16}$/
         return regex.test(ccNum.value)
     }
 
     function isValidZipCode() {
-        const zip = document.querySelector('#zip')
-
         const regex = /^\d{5}$/
         return regex.test(zip.value)
     }
 
     function isValidCVV() {
-        const cvv = document.querySelector('#cvv')
-
         const regex = /^\d{3}$/
         return regex.test(cvv.value)
     }
 
     if(paymentSelect.value === 'credit-card') {
-        if(!isValidCCNum()) {
+        if(isValidCCNum()) {
+            ccNum.parentElement.classList.add('valid')
+            ccNum.parentElement.classList.remove('not-valid')
+            ccNum.nextElementSibling.style.display = 'none'
+        } else {
             e.preventDefault()
-            // console.log('invalid num')
+            ccNum.parentElement.classList.add('not-valid')
+            ccNum.parentElement.classList.remove('valid')
+            ccNum.nextElementSibling.style.display = 'block'
         }
         
-        if(!isValidZipCode()) {
+        if(isValidZipCode()) {
+            zip.parentElement.classList.add('valid')
+            zip.parentElement.classList.remove('not-valid')
+            zip.nextElementSibling.style.display = 'none'
+        } else {
             e.preventDefault()
-            // console.log('invalid zip')
+            zip.parentElement.classList.add('not-valid')
+            zip.parentElement.classList.remove('valid')
+            zip.nextElementSibling.style.display = 'block'
         }
 
-        if(!isValidCVV()) {
+        if(isValidCVV()) {
+            cvv.parentElement.classList.add('valid')
+            cvv.parentElement.classList.remove('not-valid')
+            cvv.nextElementSibling.style.display = 'none'
+        } else {
             e.preventDefault()
-            // console.log('invalid cvv')
+            cvv.parentElement.classList.add('not-valid')
+            cvv.parentElement.classList.remove('valid')
+            cvv.nextElementSibling.style.display = 'block'
         }
     }
     
 })
 
 
-// the activities section
+// the activities section focus/blur
 
 const activityCheckboxes = document.querySelectorAll('#activities input[type="checkbox"]')
 
