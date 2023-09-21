@@ -134,9 +134,10 @@ form.addEventListener('submit', (e) => {
             element.nextElementSibling.style.display = 'block'
         }
     }
-    // function isValidName() {
-    //     return nameInput.value.trim() !== ''
-    // }
+
+    function isValidName() {
+        return nameInput.value.trim() !== ''
+    }
     function isValidEmail() {
         // regex code referenced from https://emailregex.com/
         const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -162,10 +163,9 @@ form.addEventListener('submit', (e) => {
         return regex.test(cvv.value)
     }
 
-    // displayHint(nameInput, isValidName())
+    displayHint(nameInput, isValidName())
     displayHint(email, isValidEmail())
     displayHint(activitiesTotalCost, isValidActivity())
-
     if(paymentSelect.value === 'credit-card') {
         displayHint(ccNum, isValidCCNum())
         displayHint(zip, isValidZipCode())
@@ -180,27 +180,22 @@ additionalNameHint.classList.add('hint')
 additionalNameHint.style.display = 'none'
 const nameLabel = nameInput.parentElement
 const nameHint = nameInput.nextElementSibling
-nameLabel.insertBefore(additionalNameHint, nameHint)
+nameLabel.insertAdjacentElement('beforeend', additionalNameHint)
 
 nameInput.addEventListener('keyup', (e) => {
-
-    function isValidName() {
+    function isNameBlank() {
         return nameInput.value.trim() === ''
     }
-
     function nameContainsDigits() {
         const regex = /\d+/
         return regex.test(nameInput.value)
     }
-
     if(nameContainsDigits()) {
-        e.preventDefault()
         nameLabel.classList.add('not-valid')
         nameLabel.classList.remove('valid')
         nameHint.style.display = 'none'
         additionalNameHint.style.display = 'block'
-    } else if(isValidName()) {
-        e.preventDefault()
+    } else if(isNameBlank()) {
         nameLabel.classList.add('not-valid')
         nameLabel.classList.remove('valid')
         nameHint.style.display = 'block'
