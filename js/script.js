@@ -2,6 +2,7 @@ const form = document.querySelector('form')
 
 // basic info
 const nameInput = document.querySelector('#name')
+const email = document.querySelector('#email')
 const jobRole = document.querySelector('select#title')
 const otherJobInput = document.querySelector('#other-job-role')
 const colorSelect = document.querySelector('#color')
@@ -16,6 +17,9 @@ const activitiesTotalCost = document.querySelector('#activities-cost')
 // payment info
 const paymentSelect = document.querySelector('#payment')
 const creditCard = document.querySelector('#credit-card')
+const ccNum = document.querySelector('#cc-num')
+const zip = document.querySelector('#zip')
+const cvv = document.querySelector('#cvv')
 const paypal = document.querySelector('#paypal')
 const bitcoin = document.querySelector('#bitcoin')
 
@@ -116,40 +120,27 @@ paymentSelect.addEventListener('change', (e) => {
     }
 })
 
+function displayHint(element, validator, preventRefresh) {
+    if(validator) {
+        element.parentElement.classList.add('valid')
+        element.parentElement.classList.remove('not-valid')
+        element.nextElementSibling.style.display = 'none'
+    } else {
+        preventRefresh
+        element.parentElement.classList.add('not-valid')
+        element.parentElement.classList.remove('valid')
+        element.nextElementSibling.style.display = 'block'
+    }
+}
+
 form.addEventListener('submit', (e) => {
 
-    const name = document.querySelector('#name')
-    const email = document.querySelector('#email')
-    const activityCost = document.querySelector('#activities-cost')
-    const ccNum = document.querySelector('#cc-num')
-    const zip = document.querySelector('#zip')
-    const cvv = document.querySelector('#cvv')
-    
-    function displayHint(element, validator) {
-        // if validator is true
-        if(validator) {
-            element.parentElement.classList.add('valid')
-            element.parentElement.classList.remove('not-valid')
-            element.nextElementSibling.style.display = 'none'
-        } else {
-            e.preventDefault()
-            element.parentElement.classList.add('not-valid')
-            element.parentElement.classList.remove('valid')
-            element.nextElementSibling.style.display = 'block'
-        }
-    }
     function isValidName() {
-        return name.value.trim() !== ''
-    }
-    function isValidEmail() {
-        // regex code referenced from https://emailregex.com/
-        const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-
-        return regex.test(email.value)
+        return nameInput.value.trim() !== ''
     }
     function isValidActivity() {
         const regex = /(\w*)(: \$)(\d{1,})/i
-        let totalCost = activityCost.innerText.replace(regex, '$3')
+        let totalCost = activitiesTotalCost.innerText.replace(regex, '$3')
         totalCost = +totalCost
         return totalCost !== 0
     }
@@ -166,14 +157,22 @@ form.addEventListener('submit', (e) => {
         return regex.test(cvv.value)
     }
 
-    displayHint(name, isValidName())
-    displayHint(email, isValidEmail())
-    displayHint(activityCost, isValidActivity())
+    displayHint(nameInput, isValidName(), e.preventDefault())
+    displayHint(activitiesTotalCost, isValidActivity(), e.preventDefault())
 
     if(paymentSelect.value === 'credit-card') {
-        displayHint(ccNum, isValidCCNum())
-        displayHint(zip, isValidZipCode())
-        displayHint(cvv, isValidCVV())
+        displayHint(ccNum, isValidCCNum(), e.preventDefault())
+        displayHint(zip, isValidZipCode(), e.preventDefault())
+        displayHint(cvv, isValidCVV(), e.preventDefault())
     }
 })
 
+email.addEventListener('keyup', (e) => {
+    function isValidEmail() {
+        // regex code referenced from https://emailregex.com/
+        const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+        return regex.test(email.value)
+    }
+    displayHint(email, isValidEmail(), e.preventDefault())
+})
