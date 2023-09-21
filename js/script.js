@@ -1,18 +1,25 @@
-// name field
-
+const form = document.querySelector('form')
 const nameInput = document.querySelector('#name')
-document.addEventListener('DOMContentLoaded', (e) => {
-    nameInput.focus()
-})
-
-// job role section
-
 const jobRole = document.querySelector('select#title')
-
 const otherJobInput = document.querySelector('#other-job-role')
+const colorSelect = document.querySelector('#color')
+const designSelect = document.querySelector('#design')
+const colorOptions = colorSelect.querySelectorAll(`option`)
+const activitiesField = document.querySelector('#activities')
+const activityCheckboxes = document.querySelectorAll('#activities input[type="checkbox"]')
+const paymentSelect = document.querySelector('#payment')
+const creditCard = document.querySelector('#credit-card')
+const paypal = document.querySelector('#paypal')
+const bitcoin = document.querySelector('#bitcoin')
 
-document.addEventListener('DOMContentLoaded', (e) => {  
+document.addEventListener('DOMContentLoaded', () => {
+    nameInput.focus()
     otherJobInput.hidden = true
+    colorSelect.disabled = true
+    paymentSelect.value = 'credit-card'
+    creditCard.style.display = 'block'
+    paypal.style.display = 'none'
+    bitcoin.style.display = 'none'
 })
 
 jobRole.addEventListener('change', (e) => {
@@ -21,16 +28,9 @@ jobRole.addEventListener('change', (e) => {
     }
 })
 
-// t-shirt info
-
-const colorSelect = document.querySelector('#color')
-colorSelect.disabled = true
-
-const designSelect = document.querySelector('#design')
 designSelect.addEventListener('change', (e) => {
-    const design = e.target.value
     colorSelect.disabled = false
-    const colorOptions = colorSelect.querySelectorAll(`option`)
+    const design = e.target.value
     colorOptions.forEach(option => {
         if(option.dataset.theme === design) {
             option.hidden = false
@@ -40,16 +40,10 @@ designSelect.addEventListener('change', (e) => {
     })
 })
 
-
-// activities 
-
-const activitiesField = document.querySelector('#activities')
-
 activitiesField.addEventListener('change', (e) => {
     const total = document.querySelector('#activities-cost')
     const regex = /(\w*)(: \$)(\d{1,})/i
     let totalCost = total.innerText.replace(regex, '$3')
-    // let totalCost = total.innerText.split('$').slice(-1)
     totalCost = +totalCost
     
     const activityChecked = e.target
@@ -64,23 +58,6 @@ activitiesField.addEventListener('change', (e) => {
         total.innerText = `Total: $${totalCost}`
     }
 
-    // conflicting activity times
-        // Tuesday 9am-12pm
-        // Tuesday 9am-12pm
-        // Tuesday 1pm-4pm
-        // Tuesday 1pm-4pm
-        // Wednesday 9am-12pm
-        // Wednesday 1pm-4pm
-
-    // select all 'data-day-and-time' attributes
-    // loop through all activities
-        // if activity value equals e.target value 
-            // disable checkbox input
-            // add 'disabled' class to parent label
-        // else 
-            // enable checkbox input
-            // remove 'disabled class from parent label
-    
     const dayTime = document.querySelectorAll('[data-day-and-time]')
 
     // actvitity checked TRUE
@@ -107,31 +84,22 @@ activitiesField.addEventListener('change', (e) => {
             } 
         })
     }
-        
-
 })
 
-// payment info
+activityCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('focus', e => {
+        e.target.parentElement.classList.add('focus')
+    })
+})
 
-const paymentSelect = document.querySelector('#payment')
-
-const creditCard = document.querySelector('#credit-card')
-
-document.addEventListener('DOMContentLoaded', (e) => {
-    paymentSelect.value = 'credit-card'
-
-    creditCard.style.display = 'block'
-    paypal.style.display = 'none'
-    bitcoin.style.display = 'none'
+activityCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('blur', e => {
+        e.target.parentElement.classList.remove('focus')
+    })
 })
 
 paymentSelect.addEventListener('change', (e) => {
-    
-    const paypal = document.querySelector('#paypal')
-    const bitcoin = document.querySelector('#bitcoin')
-
     const paymentChoice = e.target.value
-    
     if(paymentChoice === 'paypal') {
         creditCard.style.display = 'none'
         paypal.style.display = 'block'
@@ -147,14 +115,14 @@ paymentSelect.addEventListener('change', (e) => {
     }
 })
 
-// form validation
-// visual validation errors
-
-
-const form = document.querySelector('form')
 
 form.addEventListener('submit', (e) => {
-
+    const name = document.querySelector('#name')
+    const email = document.querySelector('#email')
+    const activityCost = document.querySelector('#activities-cost')
+    const ccNum = document.querySelector('#cc-num')
+    const zip = document.querySelector('#zip')
+    const cvv = document.querySelector('#cvv')
     function displayHint(element, validator) {
         // if validator is true
         if(validator) {
@@ -168,39 +136,21 @@ form.addEventListener('submit', (e) => {
             element.nextElementSibling.style.display = 'block'
         }
     }
-
-    const name = document.querySelector('#name')
-    const email = document.querySelector('#email')
-    const activityCost = document.querySelector('#activities-cost')
-
     function isValidName() {
         return name.value.trim() !== ''
     }
-
     function isValidEmail() {
         // regex code referenced from https://emailregex.com/
         const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
         return regex.test(email.value)
     }
-
     function isValidActivity() {
         const regex = /(\w*)(: \$)(\d{1,})/i
         let totalCost = activityCost.innerText.replace(regex, '$3')
         totalCost = +totalCost
         return totalCost !== 0
     }
-
-    displayHint(name, isValidName())
-    displayHint(email, isValidEmail())
-    displayHint(activityCost, isValidActivity())
-
-    // credit card validation
-
-    const ccNum = document.querySelector('#cc-num')
-    const zip = document.querySelector('#zip')
-    const cvv = document.querySelector('#cvv')
-
     function isValidCCNum() {
         const regex = /^\d{13,16}$/
         return regex.test(ccNum.value)
@@ -213,6 +163,11 @@ form.addEventListener('submit', (e) => {
         const regex = /^\d{3}$/
         return regex.test(cvv.value)
     }
+
+    displayHint(name, isValidName())
+    displayHint(email, isValidEmail())
+    displayHint(activityCost, isValidActivity())
+
     if(paymentSelect.value === 'credit-card') {
         displayHint(ccNum, isValidCCNum())
         displayHint(zip, isValidZipCode())
@@ -220,21 +175,3 @@ form.addEventListener('submit', (e) => {
     }
 })
 
-
-// the activities section focus/blur
-
-
-
-const activityCheckboxes = document.querySelectorAll('#activities input[type="checkbox"]')
-
-activityCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('focus', e => {
-        e.target.parentElement.classList.add('focus')
-    })
-})
-
-activityCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('blur', e => {
-        e.target.parentElement.classList.remove('focus')
-    })
-})
