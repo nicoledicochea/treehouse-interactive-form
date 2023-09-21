@@ -1,12 +1,19 @@
 const form = document.querySelector('form')
+
+// basic info
 const nameInput = document.querySelector('#name')
 const jobRole = document.querySelector('select#title')
 const otherJobInput = document.querySelector('#other-job-role')
 const colorSelect = document.querySelector('#color')
 const designSelect = document.querySelector('#design')
 const colorOptions = colorSelect.querySelectorAll(`option`)
+
+// activities field
 const activitiesField = document.querySelector('#activities')
 const activityCheckboxes = document.querySelectorAll('#activities input[type="checkbox"]')
+const activitiesTotalCost = document.querySelector('#activities-cost')
+
+// payment info
 const paymentSelect = document.querySelector('#payment')
 const creditCard = document.querySelector('#credit-card')
 const paypal = document.querySelector('#paypal')
@@ -41,48 +48,42 @@ designSelect.addEventListener('change', (e) => {
 })
 
 activitiesField.addEventListener('change', (e) => {
-    const total = document.querySelector('#activities-cost')
-    const regex = /(\w*)(: \$)(\d{1,})/i
-    let totalCost = total.innerText.replace(regex, '$3')
-    totalCost = +totalCost
-    
     const activityChecked = e.target
+    const dayTime = document.querySelectorAll('[data-day-and-time]')
+    const regex = /(\w*)(: \$)(\d{1,})/i
 
-    if(activityChecked.checked) {
-        const activityCost = activityChecked.dataset.cost
-        totalCost += +activityCost
-        total.innerText = `Total: $${totalCost}`
-    } else {
-        const activityCost = activityChecked.dataset.cost
-        totalCost -= +activityCost
-        total.innerText = `Total: $${totalCost}`
+    let totalCost = activitiesTotalCost.innerText.replace(regex, '$3')
+    totalCost = +totalCost
+
+    function disableConflictingActivities() {
+        dayTime.forEach(checkbox => {
+            if(checkbox !== activityChecked 
+            && checkbox.dataset.dayAndTime === activityChecked.dataset.dayAndTime) {
+                checkbox.disabled = true
+                checkbox.parentElement.classList.add('disabled')
+            }
+        })
+    }
+    function enableConflictingActivities() {
+        dayTime.forEach(checkbox => {
+            if(checkbox !== activityChecked 
+            && checkbox.dataset.dayAndTime === activityChecked.dataset.dayAndTime) {
+                checkbox.disabled = false
+                checkbox.parentElement.classList.remove('disabled')
+            }
+        })
     }
 
-    const dayTime = document.querySelectorAll('[data-day-and-time]')
-
-    // actvitity checked TRUE
-
-    if (activityChecked.checked) {
-        dayTime.forEach(input => {
-            if (input !== activityChecked) {
-                if (input.dataset.dayAndTime === activityChecked.dataset.dayAndTime) {
-                    input.disabled = true
-                input.parentElement.classList.add('disabled')
-                }
-            } 
-        })
-
-    // actvitity checked FALSE
-
+    if(activityChecked.checked) {
+        const cost = activityChecked.dataset.cost
+        totalCost += +cost
+        activitiesTotalCost.innerText = `Total: $${totalCost}`
+        disableConflictingActivities()
     } else {
-        dayTime.forEach(input => {
-            if (input !== activityChecked) {
-                if (input.dataset.dayAndTime === activityChecked.dataset.dayAndTime) {
-                    input.disabled = false
-                input.parentElement.classList.remove('disabled')
-                } 
-            } 
-        })
+        const cost = activityChecked.dataset.cost
+        totalCost -= +cost
+        activitiesTotalCost.innerText = `Total: $${totalCost}`
+        enableConflictingActivities()
     }
 })
 
@@ -115,14 +116,15 @@ paymentSelect.addEventListener('change', (e) => {
     }
 })
 
-
 form.addEventListener('submit', (e) => {
+
     const name = document.querySelector('#name')
     const email = document.querySelector('#email')
     const activityCost = document.querySelector('#activities-cost')
     const ccNum = document.querySelector('#cc-num')
     const zip = document.querySelector('#zip')
     const cvv = document.querySelector('#cvv')
+    
     function displayHint(element, validator) {
         // if validator is true
         if(validator) {
