@@ -156,6 +156,20 @@ const form = document.querySelector('form')
 
 form.addEventListener('submit', (e) => {
 
+    function displayHint(element, validator) {
+        // if validator is true
+        if(validator) {
+            element.parentElement.classList.add('valid')
+            element.parentElement.classList.remove('not-valid')
+            element.nextElementSibling.style.display = 'none'
+        } else {
+            e.preventDefault()
+            element.parentElement.classList.add('not-valid')
+            element.parentElement.classList.remove('valid')
+            element.nextElementSibling.style.display = 'block'
+        }
+    }
+
     // name validation
     
     function isValidName() {
@@ -166,16 +180,7 @@ form.addEventListener('submit', (e) => {
 
     const name = document.querySelector('#name')
 
-    if(isValidName()) {
-        name.parentElement.classList.add('valid')
-        name.parentElement.classList.remove('not-valid')
-        name.nextElementSibling.style.display = 'none'
-    } else {
-        e.preventDefault()
-        name.parentElement.classList.add('not-valid')
-        name.parentElement.classList.remove('valid')
-        name.nextElementSibling.style.display = 'block'
-    }
+    displayHint(name, isValidName())
 
     // email validation
 
@@ -189,39 +194,20 @@ form.addEventListener('submit', (e) => {
 
     const email = document.querySelector('#email')
 
-    if (isValidEmail()) {
-        email.parentElement.classList.add('valid')
-        email.parentElement.classList.remove('not-valid')
-        email.nextElementSibling.style.display = 'none'
-    } else {
-        e.preventDefault()
-        email.parentElement.classList.add('not-valid')
-        email.parentElement.classList.remove('valid')
-        email.nextElementSibling.style.display = 'block'
-    }
+    displayHint(email, isValidEmail())
 
     // activity validation
 
+    const total = document.querySelector('#activities-cost')
+
     function isValidActivity() {
-        const total = document.querySelector('#activities-cost')
         const regex = /(\w*)(: \$)(\d{1,})/i
         let totalCost = total.innerText.replace(regex, '$3')
         totalCost = +totalCost
-
-        return totalCost === 0
+        return totalCost !== 0
     }
 
-    if(!isValidActivity()) {
-        activitiesField.classList.add('valid')
-        activitiesField.classList.remove('not-valid')
-        activitiesField.lastElementChild.style.display = 'none'
-    } else {
-        e.preventDefault()
-        activitiesField.classList.add('not-valid')
-        activitiesField.classList.remove('valid')
-        activitiesField.lastElementChild.style.display = 'block'
-    }
-
+    displayHint(total, isValidActivity())
 
     // credit card validation
 
@@ -242,20 +228,6 @@ form.addEventListener('submit', (e) => {
     function isValidCVV() {
         const regex = /^\d{3}$/
         return regex.test(cvv.value)
-    }
-
-    function displayHint(element, validator) {
-        // if validator is true
-        if(validator) {
-            element.parentElement.classList.add('valid')
-            element.parentElement.classList.remove('not-valid')
-            element.nextElementSibling.style.display = 'none'
-        } else {
-            e.preventDefault()
-            element.parentElement.classList.add('not-valid')
-            element.parentElement.classList.remove('valid')
-            element.nextElementSibling.style.display = 'block'
-        }
     }
 
     if(paymentSelect.value === 'credit-card') {
