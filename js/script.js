@@ -151,7 +151,6 @@ paymentSelect.addEventListener('change', (e) => {
 // visual validation errors
 
 
-
 const form = document.querySelector('form')
 
 form.addEventListener('submit', (e) => {
@@ -170,44 +169,31 @@ form.addEventListener('submit', (e) => {
         }
     }
 
-    // name validation
-    
-    function isValidName() {
-        let name = document.querySelector('#name')
-        name = name.value.trim()
-        return name !== ''
-    }
-
     const name = document.querySelector('#name')
+    const email = document.querySelector('#email')
+    const activityCost = document.querySelector('#activities-cost')
 
-    displayHint(name, isValidName())
-
-    // email validation
+    function isValidName() {
+        return name.value.trim() !== ''
+    }
 
     function isValidEmail() {
-        const email = document.querySelector('#email').value
         // regex code referenced from https://emailregex.com/
         const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    
-        return regex.test(email)
+
+        return regex.test(email.value)
     }
-
-    const email = document.querySelector('#email')
-
-    displayHint(email, isValidEmail())
-
-    // activity validation
-
-    const total = document.querySelector('#activities-cost')
 
     function isValidActivity() {
         const regex = /(\w*)(: \$)(\d{1,})/i
-        let totalCost = total.innerText.replace(regex, '$3')
+        let totalCost = activityCost.innerText.replace(regex, '$3')
         totalCost = +totalCost
         return totalCost !== 0
     }
 
-    displayHint(total, isValidActivity())
+    displayHint(name, isValidName())
+    displayHint(email, isValidEmail())
+    displayHint(activityCost, isValidActivity())
 
     // credit card validation
 
@@ -219,23 +205,19 @@ form.addEventListener('submit', (e) => {
         const regex = /^\d{13,16}$/
         return regex.test(ccNum.value)
     }
-
     function isValidZipCode() {
         const regex = /^\d{5}$/
         return regex.test(zip.value)
     }
-
     function isValidCVV() {
         const regex = /^\d{3}$/
         return regex.test(cvv.value)
     }
-
     if(paymentSelect.value === 'credit-card') {
         displayHint(ccNum, isValidCCNum())
         displayHint(zip, isValidZipCode())
         displayHint(cvv, isValidCVV())
     }
-    
 })
 
 
@@ -256,29 +238,3 @@ activityCheckboxes.forEach(checkbox => {
         e.target.parentElement.classList.remove('focus')
     })
 })
-
-
-
-
-// validation using helper functions
-
-// // displayHint helper function
-// function displayHint(display, element) {
-//     // show element when show is true
-//     // hide when show is false
-//     if (display) {
-//         element.style.display = 'block'
-//     } else {
-//         element.style.display = 'none'
-//     }
-// }
-
-// // createListener helper function
-// function createListener(validator) {
-//     return e => {
-//         const text = e.target.value
-//         const valid = validator(text)
-//         const showHint
-//     }
-// }
-
