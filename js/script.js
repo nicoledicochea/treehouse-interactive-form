@@ -173,25 +173,42 @@ form.addEventListener('submit', (e) => {
     }
 })
 
+const additionalNameHint = document.createElement('span')
+additionalNameHint.innerText = "Name field cannot contain digits"
+additionalNameHint.classList.add('name-hint')
+additionalNameHint.classList.add('hint')
+additionalNameHint.style.display = 'none'
+const nameLabel = nameInput.parentElement
+const nameHint = nameInput.nextElementSibling
+nameLabel.insertBefore(additionalNameHint, nameHint)
+
 nameInput.addEventListener('keyup', (e) => {
 
     function isValidName() {
-        return nameInput.value.trim() !== ''
+        return nameInput.value.trim() === ''
     }
 
-    // function nameContainsDigits() {
-    //     const regex = /\d+/
-    //     return regex.test(nameInput.value)
-    // }
-    
- if(isValidName()) {
-        nameInput.parentElement.classList.add('valid')
-        nameInput.parentElement.classList.remove('not-valid')
-        nameInput.nextElementSibling.style.display = 'none'
-    } else {
+    function nameContainsDigits() {
+        const regex = /\d+/
+        return regex.test(nameInput.value)
+    }
+
+    if(nameContainsDigits()) {
         e.preventDefault()
-        nameInput.parentElement.classList.add('not-valid')
-        nameInput.parentElement.classList.remove('valid')
-        nameInput.nextElementSibling.style.display = 'block'
+        nameLabel.classList.add('not-valid')
+        nameLabel.classList.remove('valid')
+        nameHint.style.display = 'none'
+        additionalNameHint.style.display = 'block'
+    } else if(isValidName()) {
+        e.preventDefault()
+        nameLabel.classList.add('not-valid')
+        nameLabel.classList.remove('valid')
+        nameHint.style.display = 'block'
+        additionalNameHint.style.display = 'none'
+    } else {
+        nameLabel.classList.add('valid')
+        nameLabel.classList.remove('not-valid')
+        nameHint.style.display = 'none'
+        additionalNameHint.style.display = 'none'
     }
 })
