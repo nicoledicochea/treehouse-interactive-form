@@ -64,6 +64,52 @@ activitiesField.addEventListener('change', (e) => {
         totalCost -= +activityCost
         total.innerText = `Total: $${totalCost}`
     }
+
+    // conflicting activity times
+        // Tuesday 9am-12pm
+        // Tuesday 9am-12pm
+        // Tuesday 1pm-4pm
+        // Tuesday 1pm-4pm
+        // Wednesday 9am-12pm
+        // Wednesday 1pm-4pm
+
+    // select all 'data-day-and-time' attributes
+    // loop through all activities
+        // if activity value equals e.target value 
+            // disable checkbox input
+            // add 'disabled' class to parent label
+        // else 
+            // enable checkbox input
+            // remove 'disabled class from parent label
+    
+    const dayTime = document.querySelectorAll('[data-day-and-time]')
+
+    // actvitity checked TRUE
+
+    if (activityChecked.checked) {
+        dayTime.forEach(input => {
+            if (input !== activityChecked) {
+                if (input.dataset.dayAndTime === activityChecked.dataset.dayAndTime) {
+                    input.disabled = true
+                input.parentElement.classList.add('disabled')
+                }
+            } 
+        })
+
+    // actvitity checked FALSE
+
+    } else {
+        dayTime.forEach(input => {
+            if (input !== activityChecked) {
+                if (input.dataset.dayAndTime === activityChecked.dataset.dayAndTime) {
+                    input.disabled = false
+                input.parentElement.classList.remove('disabled')
+                } 
+            } 
+        })
+    }
+        
+
 })
 
 // payment info
