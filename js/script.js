@@ -134,9 +134,9 @@ form.addEventListener('submit', (e) => {
             element.nextElementSibling.style.display = 'block'
         }
     }
-    function isValidName() {
-        return nameInput.value.trim() !== ''
-    }
+    // function isValidName() {
+    //     return nameInput.value.trim() !== ''
+    // }
     function isValidEmail() {
         // regex code referenced from https://emailregex.com/
         const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -162,7 +162,7 @@ form.addEventListener('submit', (e) => {
         return regex.test(cvv.value)
     }
 
-    displayHint(nameInput, isValidName())
+    // displayHint(nameInput, isValidName())
     displayHint(email, isValidEmail())
     displayHint(activitiesTotalCost, isValidActivity())
 
@@ -174,7 +174,17 @@ form.addEventListener('submit', (e) => {
 })
 
 nameInput.addEventListener('keyup', (e) => {
-    if(nameInput.value.trim() !== '') {
+
+    function isValidName() {
+        return nameInput.value.trim() !== ''
+    }
+
+    // function nameContainsDigits() {
+    //     const regex = /\d+/
+    //     return regex.test(nameInput.value)
+    // }
+    
+ if(isValidName()) {
         nameInput.parentElement.classList.add('valid')
         nameInput.parentElement.classList.remove('not-valid')
         nameInput.nextElementSibling.style.display = 'none'
