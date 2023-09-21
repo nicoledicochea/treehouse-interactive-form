@@ -120,23 +120,28 @@ paymentSelect.addEventListener('change', (e) => {
     }
 })
 
-function displayHint(element, validator, preventRefresh) {
-    if(validator) {
-        element.parentElement.classList.add('valid')
-        element.parentElement.classList.remove('not-valid')
-        element.nextElementSibling.style.display = 'none'
-    } else {
-        preventRefresh
-        element.parentElement.classList.add('not-valid')
-        element.parentElement.classList.remove('valid')
-        element.nextElementSibling.style.display = 'block'
-    }
-}
-
 form.addEventListener('submit', (e) => {
 
+    function displayHint(element, validator) {
+        if(validator) {
+            element.parentElement.classList.add('valid')
+            element.parentElement.classList.remove('not-valid')
+            element.nextElementSibling.style.display = 'none'
+        } else {
+            e.preventDefault()
+            element.parentElement.classList.add('not-valid')
+            element.parentElement.classList.remove('valid')
+            element.nextElementSibling.style.display = 'block'
+        }
+    }
     function isValidName() {
         return nameInput.value.trim() !== ''
+    }
+    function isValidEmail() {
+        // regex code referenced from https://emailregex.com/
+        const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+        return regex.test(email.value)
     }
     function isValidActivity() {
         const regex = /(\w*)(: \$)(\d{1,})/i
@@ -157,22 +162,26 @@ form.addEventListener('submit', (e) => {
         return regex.test(cvv.value)
     }
 
-    displayHint(nameInput, isValidName(), e.preventDefault())
-    displayHint(activitiesTotalCost, isValidActivity(), e.preventDefault())
+    displayHint(nameInput, isValidName())
+    displayHint(email, isValidEmail())
+    displayHint(activitiesTotalCost, isValidActivity())
 
     if(paymentSelect.value === 'credit-card') {
-        displayHint(ccNum, isValidCCNum(), e.preventDefault())
-        displayHint(zip, isValidZipCode(), e.preventDefault())
-        displayHint(cvv, isValidCVV(), e.preventDefault())
+        displayHint(ccNum, isValidCCNum())
+        displayHint(zip, isValidZipCode())
+        displayHint(cvv, isValidCVV())
     }
 })
 
-email.addEventListener('keyup', (e) => {
-    function isValidEmail() {
-        // regex code referenced from https://emailregex.com/
-        const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-
-        return regex.test(email.value)
+nameInput.addEventListener('keyup', (e) => {
+    if(nameInput.value.trim() !== '') {
+        nameInput.parentElement.classList.add('valid')
+        nameInput.parentElement.classList.remove('not-valid')
+        nameInput.nextElementSibling.style.display = 'none'
+    } else {
+        e.preventDefault()
+        nameInput.parentElement.classList.add('not-valid')
+        nameInput.parentElement.classList.remove('valid')
+        nameInput.nextElementSibling.style.display = 'block'
     }
-    displayHint(email, isValidEmail(), e.preventDefault())
 })
