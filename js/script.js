@@ -44,6 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
 jobRole.addEventListener('change', (e) => {
     if(e.target.value ==='other') {
         otherJobInput.hidden = false
+    } else {
+        otherJobInput.hidden = true
     }
 })
 
