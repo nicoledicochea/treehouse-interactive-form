@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
 })
 
 jobRole.addEventListener('change', (e) => {
-    console.log(e.target.value)
     if(e.target.value ==='other') {
         otherJobInput.hidden = false
     }
@@ -245,45 +244,32 @@ form.addEventListener('submit', (e) => {
         return regex.test(cvv.value)
     }
 
-    if(paymentSelect.value === 'credit-card') {
-        if(isValidCCNum()) {
-            ccNum.parentElement.classList.add('valid')
-            ccNum.parentElement.classList.remove('not-valid')
-            ccNum.nextElementSibling.style.display = 'none'
+    function displayHint(element, validator) {
+        // if validator is true
+        if(validator) {
+            element.parentElement.classList.add('valid')
+            element.parentElement.classList.remove('not-valid')
+            element.nextElementSibling.style.display = 'none'
         } else {
             e.preventDefault()
-            ccNum.parentElement.classList.add('not-valid')
-            ccNum.parentElement.classList.remove('valid')
-            ccNum.nextElementSibling.style.display = 'block'
+            element.parentElement.classList.add('not-valid')
+            element.parentElement.classList.remove('valid')
+            element.nextElementSibling.style.display = 'block'
         }
-        
-        if(isValidZipCode()) {
-            zip.parentElement.classList.add('valid')
-            zip.parentElement.classList.remove('not-valid')
-            zip.nextElementSibling.style.display = 'none'
-        } else {
-            e.preventDefault()
-            zip.parentElement.classList.add('not-valid')
-            zip.parentElement.classList.remove('valid')
-            zip.nextElementSibling.style.display = 'block'
-        }
+    }
 
-        if(isValidCVV()) {
-            cvv.parentElement.classList.add('valid')
-            cvv.parentElement.classList.remove('not-valid')
-            cvv.nextElementSibling.style.display = 'none'
-        } else {
-            e.preventDefault()
-            cvv.parentElement.classList.add('not-valid')
-            cvv.parentElement.classList.remove('valid')
-            cvv.nextElementSibling.style.display = 'block'
-        }
+    if(paymentSelect.value === 'credit-card') {
+        displayHint(ccNum, isValidCCNum())
+        displayHint(zip, isValidZipCode())
+        displayHint(cvv, isValidCVV())
     }
     
 })
 
 
 // the activities section focus/blur
+
+
 
 const activityCheckboxes = document.querySelectorAll('#activities input[type="checkbox"]')
 
@@ -300,4 +286,27 @@ activityCheckboxes.forEach(checkbox => {
 })
 
 
+
+
+// validation using helper functions
+
+// // displayHint helper function
+// function displayHint(display, element) {
+//     // show element when show is true
+//     // hide when show is false
+//     if (display) {
+//         element.style.display = 'block'
+//     } else {
+//         element.style.display = 'none'
+//     }
+// }
+
+// // createListener helper function
+// function createListener(validator) {
+//     return e => {
+//         const text = e.target.value
+//         const valid = validator(text)
+//         const showHint
+//     }
+// }
 
