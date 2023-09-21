@@ -54,9 +54,13 @@ jobRole.addEventListener('change', (e) => {
  * change color options when design input changes
 */
 designSelect.addEventListener('change', (e) => {
-    colorSelect.value = 'Select a design theme above'
     colorSelect.disabled = false
     const design = e.target.value
+    if(design === 'js puns') {
+        colorSelect.value = 'cornflowerblue'
+    } else {
+        colorSelect.value = 'tomato'
+    }
     colorOptions.forEach(color => {
         if (color.dataset.theme === design) {
             color.hidden = false
